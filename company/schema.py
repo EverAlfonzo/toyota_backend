@@ -4,7 +4,7 @@ import graphene
 from graphene_django.types import DjangoObjectType, ObjectType
 
 from company.models import CompanyImage
-from xionict.views import resize
+from utils.views import resize
 from .models import Company
 
 class CompanyImageType(DjangoObjectType):
@@ -41,7 +41,7 @@ class CompanyType(DjangoObjectType):
 
 
 # Create a Query type
-class Query(ObjectType):
+class CompanyQuery(ObjectType):
     company = graphene.Field(CompanyType)
 
 
@@ -52,4 +52,4 @@ class Query(ObjectType):
 
 
 
-schema = graphene.Schema(query=Query)
+schema = graphene.Schema(query=CompanyQuery)

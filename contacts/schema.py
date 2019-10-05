@@ -12,7 +12,7 @@ class ContactType(DjangoObjectType):
         model = Contact
 
 # Create a Query type
-class Query(ObjectType):
+class ContactQuery(ObjectType):
     contact = graphene.Field(ContactType)
 
     def resolve_contact(self, info, **kwargs):
@@ -34,7 +34,7 @@ class CreateContact(graphene.Mutation):
         return CreateContact(ok=True)
 
 
-class Mutation(ObjectType):
+class ContactMutation(ObjectType):
     create_contact = CreateContact.Field()
 
-schema = graphene.Schema(query=Query,mutation=Mutation)
+schema = graphene.Schema(query=ContactQuery,mutation=ContactMutation)

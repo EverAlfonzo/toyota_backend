@@ -15,18 +15,19 @@ class Taller(models.Model):
         verbose_name = 'Taller'
         verbose_name_plural = 'Talleres'
 
-    title = models.CharField(verbose_name='Título', max_length=100, unique=True)
-    address = models.CharField(max_length=200, verbose_name='Dirección')
+    address = models.CharField(max_length=200, verbose_name='Dirección',null=True)
     image = models.ImageField('Imagen', upload_to='images/talleres/', null=True)
-    phones = models.CharField(verbose_name='Teléfonos',null=True, max_length=100,
-                              help_text='los teléfonos pueden ir separados por comas')
+    name = models.CharField(verbose_name='Nombre', max_length=100, unique=True,null=True)
+    description = models.CharField(verbose_name='Descripcion Breve', max_length=200, default='', null=True, blank=True)
+    large_description = models.TextField(verbose_name='Descripción Larga', null=True, blank=True)
+    phone = models.CharField(verbose_name='Teléfono', max_length=50, default='')
+    phone2 = models.CharField(verbose_name='Teléfono', max_length=50, default='', null=True, blank=True)
 
     city = models.ForeignKey(City, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='Ciudad')
     location = PlainLocationField(based_fields=['city'], zoom=7, null=True, default='-25.3014877,-57.5804482')
-    # location = GeopositionField()
 
     def __str__(self):
-        return self.title
+        return str(self.name)
 
     def image_tag(self):
         return mark_safe('<img width="150" src="%s%s" />' % (MEDIA_URL, self.image or 'images/talleres/default.png'))
