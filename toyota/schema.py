@@ -1,9 +1,10 @@
 import graphene
 
-from talleres.schema import TallerQuery
+from articles.schema import ArticlesQuery
+from location.schema import LocationQuery
+from talleres.schema import TallerQuery, TallerMutation
 
-
-class Query(TallerQuery, graphene.ObjectType):
+class Query(TallerQuery,ArticlesQuery, LocationQuery, graphene.ObjectType):
     # This class will inherit from multiple Queries
     # as we begin to add more apps to our project
     pass
@@ -13,4 +14,4 @@ class Query(TallerQuery, graphene.ObjectType):
 
 # schema = graphene.Schema(query=Query,mutation=Mutation)
 
-schema = graphene.Schema(query=Query)
+schema = graphene.Schema(query=Query,mutation=TallerMutation )

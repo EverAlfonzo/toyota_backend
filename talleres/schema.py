@@ -5,6 +5,7 @@ from django.db.models.aggregates import Count
 from graphene_django.types import DjangoObjectType, ObjectType
 
 from toyota.settings import MEDIA_URL
+from utils.mutations import BaseMutation
 from utils.views import resize
 from .models import Taller
 from graphene_django.converter import convert_django_field, convert_field_to_string
@@ -40,4 +41,13 @@ class TallerQuery(ObjectType):
         return Taller.objects.all()
 
 
-schema = graphene.Schema(query=TallerQuery)
+
+class SearchTallerMutation(BaseMutation):
+    object_list = graphene.List(TallerType)
+    queryset = Taller.objects.all()
+
+
+
+
+class TallerMutation(ObjectType):
+    search_talleres = SearchTallerMutation.Field()

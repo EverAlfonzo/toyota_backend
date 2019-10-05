@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'suit',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,12 +42,19 @@ INSTALLED_APPS = [
     'graphene_django',
     'easy_thumbnails',
     'location.apps.LocationConfig',
-    'location_field.apps.DefaultConfig'
+    'location_field.apps.DefaultConfig',
+    'corsheaders',
+    'company.apps.CompanyConfig',
+    'articles.apps.ArticlesConfig',
+    'contacts.apps.ContactConfig'
+
 ]
 
 GRAPHENE = {
     'SCHEMA': 'app.schema.schema' # Where your Graphene schema lives
 }
+
+CORS_ORIGIN_ALLOW_ALL = '*'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -56,6 +64,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'toyota.urls'
