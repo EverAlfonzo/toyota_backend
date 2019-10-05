@@ -46,13 +46,24 @@ INSTALLED_APPS = [
     'corsheaders',
     'company.apps.CompanyConfig',
     'articles.apps.ArticlesConfig',
-    'contacts.apps.ContactConfig'
+    'contacts.apps.ContactConfig',
+    'usuarios.apps.UsuariosConfig'
 
 ]
 
+
+
 GRAPHENE = {
-    'SCHEMA': 'app.schema.schema' # Where your Graphene schema lives
+     'SCHEMA': 'app.schema.schema',
+    'MIDDLEWARE': [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    ],
 }
+
+AUTHENTICATION_BACKENDS = [
+    'graphql_jwt.backends.JSONWebTokenBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 CORS_ORIGIN_ALLOW_ALL = '*'
 
@@ -66,6 +77,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+
 ]
 
 ROOT_URLCONF = 'toyota.urls'
