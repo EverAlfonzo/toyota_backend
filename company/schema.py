@@ -3,9 +3,29 @@ from xml.dom.minicompat import StringTypes
 import graphene
 from graphene_django.types import DjangoObjectType, ObjectType
 
-from company.models import CompanyImage
+from company.models import CompanyImage, Brand, Model
 from utils.views import resize
 from .models import Company
+
+
+
+
+class ModelType(DjangoObjectType):
+    class Meta:
+        model = Model
+
+
+class BrandType(DjangoObjectType):
+
+    class Meta:
+        model = Brand
+
+    def resolve_image(self, info, **kwargs):
+        path = resize(str(self.image), '600,600')
+        return path and info.context.build_absolute_uri(path) or None
+
+
+
 
 class CompanyImageType(DjangoObjectType):
     class Meta:
@@ -13,6 +33,7 @@ class CompanyImageType(DjangoObjectType):
     def resolve_image(self, info, **kwargs):
         path = resize(str(self.image), '600,600')
         return path and info.context.build_absolute_uri(path) or None
+
 
 # Create a GraphQL type for the actor model
 class CompanyType(DjangoObjectType):
@@ -43,7 +64,6 @@ class CompanyType(DjangoObjectType):
 # Create a Query type
 class CompanyQuery(ObjectType):
     company = graphene.Field(CompanyType)
-
 
     def resolve_company(self, info, **kwargs):
         return Company.objects.first()
