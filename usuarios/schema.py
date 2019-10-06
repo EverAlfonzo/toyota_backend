@@ -5,6 +5,10 @@ from graphql import GraphQLError
 import graphene
 from graphene_django import DjangoObjectType
 
+from company.models import Delivery
+from company.schema import DeliveryType
+from talleres.models import Service
+from talleres.schema import ServiceType
 from usuarios.models import Profile
 from utils.views import resize
 
@@ -62,10 +66,24 @@ class UserData(graphene.Mutation):
         return CreateUser(user=User.objects.get(username=username))
 
 
+class MyStuffs(graphene.Mutation):
+    services = graphene.List(ServiceType)
+    deliveries = graphene.List(DeliveryType)
+
+    class Arguments:
+        username = graphene.String(required=True)
+
+    def mutate(self, info, username):
+
+        return MyStuffs(services=Service.objects.filter(user__username=username),
+                        deliveries=Delivery.objects.filter(user__username=username)
+                        )
+
 
 class UsuariosMutation(graphene.ObjectType):
     create_user = CreateUser.Field()
     user_data = UserData.Field()
+    my_stuffs = MyStuffs.Field()
 
 class UsuariosQuery(graphene.ObjectType):
     users = graphene.List(UserType)
