@@ -66,24 +66,32 @@ class UserData(graphene.Mutation):
         return CreateUser(user=User.objects.get(username=username))
 
 
-class MyStuffs(graphene.Mutation):
+class MyServices(graphene.Mutation):
     services = graphene.List(ServiceType)
+
+    class Arguments:
+        username = graphene.String(required=True)
+
+    def mutate(self, info, username):
+        return MyServices(services=Service.objects.filter(user__username=username))
+
+
+class MyDeliveries(graphene.Mutation):
     deliveries = graphene.List(DeliveryType)
 
     class Arguments:
         username = graphene.String(required=True)
 
     def mutate(self, info, username):
-
-        return MyStuffs(services=Service.objects.filter(user__username=username),
-                        deliveries=Delivery.objects.filter(user__username=username)
-                        )
+        return MyDeliveries(deliveries=Delivery.objects.filter(user__username=username))
 
 
 class UsuariosMutation(graphene.ObjectType):
     create_user = CreateUser.Field()
     user_data = UserData.Field()
-    my_stuffs = MyStuffs.Field()
+    my_services = MyServices.Field()
+    my_deliveries = MyDeliveries.Field()
+
 
 class UsuariosQuery(graphene.ObjectType):
     users = graphene.List(UserType)

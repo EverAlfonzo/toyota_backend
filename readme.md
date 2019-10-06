@@ -41,6 +41,9 @@ mutation {
 
 
 
+### ssh
+
+ssh -i hackathon.pem ubuntu@3.82.66.35
 
 ### instalar virtualenv
 sudo apt install virtualenv
@@ -54,7 +57,7 @@ cd toyota
 
 
 ### crear entorno virtual
-virualenv -p python3 venv
+virtualenv -p python3 venv
 
 ### activar el entorno virtual
 source venv/bin/activate
