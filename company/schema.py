@@ -14,7 +14,9 @@ class ModelType(DjangoObjectType):
     class Meta:
         model = Model
 
+
 class DeliveryType(DjangoObjectType):
+
     class Meta:
         model = Delivery
 
