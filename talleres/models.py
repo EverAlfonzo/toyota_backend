@@ -53,9 +53,6 @@ class Service(models.Model):
         verbose_name_plural = 'Servicios'
     ID_TYPE = (('CHAPA','Chapa'), ('CHASIS','Chasis'))
     user = models.ForeignKey(User, on_delete=models.PROTECT)
-    name = models.CharField(verbose_name='Nombre', max_length=100, null=True)
-    phone = models.CharField(verbose_name='Celular', max_length=100, null=True)
-    email = models.CharField(verbose_name='Email', max_length=100, null=True)
     document = models.CharField(verbose_name='Documento', max_length=100, null=True)
     brand = models.ForeignKey(Brand, on_delete=models.PROTECT, verbose_name='Marca')
     model = models.ForeignKey(Model, on_delete=models.PROTECT, verbose_name='Modelo')
@@ -63,11 +60,12 @@ class Service(models.Model):
     car_km = models.PositiveIntegerField(null=True, verbose_name='Kilometraje')
     license_plate = models.CharField(verbose_name='Número', max_length=100, null=True)
     id_type = models.CharField(verbose_name='Tipo de Identificación', choices= ID_TYPE, max_length=100, null=True)
-    workshop = models.ForeignKey(Taller, on_delete=models.PROTECT, null=True)
+    workshop = models.ForeignKey(Taller, on_delete=models.PROTECT, null=True, verbose_name='Taller')
+    service_type = models.ForeignKey(ServiceType, on_delete=models.PROTECT, null=True)
     comment = models.TextField(null=True, verbose_name='Comentario')
     date = models.DateField(null=True,verbose_name='Fecha')
     time = models.TimeField(null=True, verbose_name='Hora')
 
     def __str__(self):
-        return str(self.name)
+        return str(self.user)
 

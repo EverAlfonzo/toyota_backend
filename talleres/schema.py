@@ -1,3 +1,4 @@
+from datetime import datetime
 from random import randint
 
 import graphene
@@ -73,5 +74,45 @@ class SearchTallerMutation(BaseMutation):
     queryset = Taller.objects.all()
 
 
+class CreateService(graphene.Mutation):
+    service = graphene.Field(ServiceType)
+
+    class Arguments:
+        user_id = graphene.ID(required=True)
+        document = graphene.String(required=True)
+        brand_id = graphene.ID(required=True)
+        model_id = graphene.ID(required=True)
+        year = graphene.Int(required=True)
+        car_km = graphene.Int(required=True)
+        license_plate = graphene.String(required=True)
+        id_type = graphene.String(required=True)
+        workshop_id = graphene.ID(required=True)
+        comment = graphene.String(required=True)
+        date = graphene.String(required=True)
+        time = graphene.String(required=True)
+
+
+    def mutate(self, info, user_id, document, brand_id, model_id, year, car_km,
+               license_plate, id_type, workshop_id, date, time, comment):
+
+        service = Service(
+            user_id=user_id,
+            document=document,
+            brand_id=brand_id,
+            model_id=model_id,
+            year=year,
+            car_km=car_km,
+            license_plate=license_plate,
+            id_type=id_type,
+            workshop_id=workshop_id,
+            comment=comment,
+            date=datetime.strptime(date, "%Y-%m-%d"),
+            time=datetime.strptime(time+":00", '%H:%M:%S').time()
+        )
+        service.save()
+        return CreateService(service=service)
+
+
 class TallerMutation(ObjectType):
     search_talleres = SearchTallerMutation.Field()
+    create_service = CreateService.Field()

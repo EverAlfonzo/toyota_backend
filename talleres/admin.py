@@ -23,7 +23,7 @@ class ServiceTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = ['name']
-    search_fields = ['name']
+    list_display = ['user']
+    search_fields = ['user__name']
 
 
