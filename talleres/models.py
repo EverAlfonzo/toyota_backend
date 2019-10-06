@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
@@ -6,7 +7,7 @@ from django.db import models
 from django.utils.safestring import mark_safe
 from location_field.models.plain import PlainLocationField
 
-from company.models import Brand
+from company.models import Brand, Model
 from location.models import City
 from toyota.settings import MEDIA_URL
 
@@ -51,11 +52,13 @@ class Service(models.Model):
         verbose_name = 'Servicio'
         verbose_name_plural = 'Servicios'
     ID_TYPE = (('CHAPA','Chapa'), ('CHASIS','Chasis'))
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
     name = models.CharField(verbose_name='Nombre', max_length=100, null=True)
     phone = models.CharField(verbose_name='Celular', max_length=100, null=True)
     email = models.CharField(verbose_name='Email', max_length=100, null=True)
     document = models.CharField(verbose_name='Documento', max_length=100, null=True)
-    brand = models.ForeignKey(Brand, on_delete=models.PROTECT)
+    brand = models.ForeignKey(Brand, on_delete=models.PROTECT, verbose_name='Marca')
+    model = models.ForeignKey(Model, on_delete=models.PROTECT, verbose_name='Modelo')
     year = models.PositiveSmallIntegerField(verbose_name='Año', null=True)
     car_km = models.PositiveIntegerField(null=True, verbose_name='Kilometraje')
     license_plate = models.CharField(verbose_name='Número', max_length=100, null=True)

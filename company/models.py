@@ -55,19 +55,14 @@ class Brand(models.Model):
     name = models.CharField(verbose_name='Nombre',max_length=100,unique=True)
     image = models.ImageField('Imagen',upload_to='images/brands/',null=True)
 
-
     def __str__(self):
         return self.name
-
 
     def image_tag(self):
         return mark_safe('<img width="150" src="%s%s" />' % (MEDIA_URL, self.image or 'images/default.png'))
 
     image_tag.short_description = 'Vista Previa'
     image_tag.allow_tags = True
-
-    def __str__(self):
-        return self.name
 
 
 class Model(models.Model):

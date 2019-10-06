@@ -8,21 +8,20 @@ from utils.views import resize
 from .models import Company
 
 
-
-
 class ModelType(DjangoObjectType):
     class Meta:
         model = Model
 
-
 class BrandType(DjangoObjectType):
+
+    def resolve_image(self, info, **kwargs):
+        path = resize(str(self.image), '300,300')
+        return path and info.context.build_absolute_uri(path) or None
 
     class Meta:
         model = Brand
 
-    def resolve_image(self, info, **kwargs):
-        path = resize(str(self.image), '600,600')
-        return path and info.context.build_absolute_uri(path) or None
+
 
 
 
@@ -30,6 +29,7 @@ class BrandType(DjangoObjectType):
 class CompanyImageType(DjangoObjectType):
     class Meta:
         model = CompanyImage
+
     def resolve_image(self, info, **kwargs):
         path = resize(str(self.image), '600,600')
         return path and info.context.build_absolute_uri(path) or None
@@ -55,8 +55,6 @@ class CompanyType(DjangoObjectType):
     def resolve_images_qty(self,info,**kwargs):
         return int(self.companyimage_set.all().count())
 
-
-
     class Meta:
         model = Company
 
@@ -64,12 +62,32 @@ class CompanyType(DjangoObjectType):
 # Create a Query type
 class CompanyQuery(ObjectType):
     company = graphene.Field(CompanyType)
+    brands = graphene.List(BrandType)
+    brand = graphene.Field(BrandType, id=graphene.Int())
+
+    models = graphene.List(ModelType)
+    model = graphene.Field(ModelType, id=graphene.Int())
+
+    def resolve_model(self, info, **kwargs):
+        id = kwargs.get('id')
+        if id is not None:
+            return Model.objects.get(pk=id)
+        return None
+
+    def resolve_models(self, info, **kwargs):
+        return Model.objects.all()
+
+    def resolve_brand(self, info, **kwargs):
+        id = kwargs.get('id')
+        if id is not None:
+            return Brand.objects.get(pk=id)
+        return None
+
+    def resolve_brands(self, info, **kwargs):
+        return Brand.objects.all()
 
     def resolve_company(self, info, **kwargs):
         return Company.objects.first()
-
-
-
 
 
 schema = graphene.Schema(query=CompanyQuery)
