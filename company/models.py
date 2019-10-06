@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 # from location_field.models.spatial import LocationField
 # from django.contrib.gis.geos import Point
@@ -76,3 +77,18 @@ class Model(models.Model):
     def __str__(self):
         return self.name
 
+
+
+class Delivery(models.Model):
+    class Meta:
+        verbose_name_plural = 'Mantenimientos Express'
+        verbose_name = 'Mantenimiento Express'
+    user = models.ForeignKey(User, verbose_name='usuario', on_delete=models.PROTECT)
+    number = models.PositiveIntegerField(null=True, verbose_name='Número de Casa')
+    date = models.DateField(null=True, verbose_name='Fecha')
+    time = models.TimeField(null=True,verbose_name='Hora')
+    comment = models.TextField(null=True,verbose_name='Comentario')
+    location = PlainLocationField(zoom=7, null=True, default='-25.3014877,-57.5804482')
+
+    def __str__(self):
+        return "%s - %s"%(self.date.strftime('%d/%m/%Y'),self.user.__str__())

@@ -52,11 +52,30 @@ class CreateUser(graphene.Mutation):
         return CreateUser(user=user)
 
 
+class UserData(graphene.Mutation):
+    user = graphene.Field(UserType)
+
+    class Arguments:
+        username = graphene.String(required=True)
+
+    def mutate(self, info, username):
+        return CreateUser(user=User.objects.get(username=username))
+
+
+
 class UsuariosMutation(graphene.ObjectType):
     create_user = CreateUser.Field()
+    user_data = UserData.Field()
 
 class UsuariosQuery(graphene.ObjectType):
     users = graphene.List(UserType)
+    me = graphene.Field(UserType)
+
+    def resolve_me(self, info):
+        user = info.context.user
+        if user.is_anonymous:
+            raise Exception('Authentication Failure!')
+        return user
 
     def resolve_users(self, info):
         return get_user_model().objects.all()

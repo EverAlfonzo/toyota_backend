@@ -1,9 +1,11 @@
+from datetime import datetime
 from xml.dom.minicompat import StringTypes
+import time as timeObj
 
 import graphene
 from graphene_django.types import DjangoObjectType, ObjectType
 
-from company.models import CompanyImage, Brand, Model
+from company.models import CompanyImage, Brand, Model, Delivery
 from utils.views import resize
 from .models import Company
 
@@ -11,6 +13,10 @@ from .models import Company
 class ModelType(DjangoObjectType):
     class Meta:
         model = Model
+
+class DeliveryType(DjangoObjectType):
+    class Meta:
+        model = Delivery
 
 class BrandType(DjangoObjectType):
 
@@ -20,10 +26,6 @@ class BrandType(DjangoObjectType):
 
     class Meta:
         model = Brand
-
-
-
-
 
 
 class CompanyImageType(DjangoObjectType):
@@ -90,4 +92,33 @@ class CompanyQuery(ObjectType):
         return Company.objects.first()
 
 
-schema = graphene.Schema(query=CompanyQuery)
+class CreateDelivery(graphene.Mutation):
+    delivery = graphene.Field(DeliveryType)
+
+    class Arguments:
+        user_id = graphene.ID(required=True)
+        number = graphene.Int(required=True)
+        location = graphene.String(required=True)
+        comment = graphene.String(required=True)
+        date = graphene.String(required=True)
+        time = graphene.String(required=True)
+
+    def mutate(self, info, user_id, number, location, date, time, comment):
+        print(date,time)
+        delivery = Delivery(
+            user_id=user_id,
+            number=number,
+            location=location,
+            comment=comment,
+            date=datetime.strptime(date, "%Y-%m-%d"),
+            time=datetime.strptime(time+":00", '%H:%M:%S').time()
+        )
+        delivery.save()
+        return CreateDelivery(delivery=delivery)
+
+
+class CompanyMutation(graphene.ObjectType):
+    create_delivery = CreateDelivery.Field()
+
+
+schema = graphene.Schema(query=CompanyQuery, mutation=CompanyMutation)

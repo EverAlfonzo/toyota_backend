@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from graphql_jwt import ObtainJSONWebToken
 
 from articles.schema import ArticlesQuery
-from company.schema import CompanyQuery
+from company.schema import CompanyQuery, CompanyMutation
 from contacts.schema import ContactMutation
 from location.schema import LocationQuery
 from talleres.schema import TallerQuery, TallerMutation
@@ -28,7 +28,7 @@ class MyObtainJSONWebToken(ObtainJSONWebToken):
         })
         return super(MyObtainJSONWebToken, cls).Field(*args, **kwargs)
 
-class Mutation(ContactMutation, UsuariosMutation, TallerMutation,graphene.ObjectType):
+class Mutation(ContactMutation, UsuariosMutation,CompanyMutation, TallerMutation,graphene.ObjectType):
     token_auth = MyObtainJSONWebToken.Field()
     verify_token = graphql_jwt.Verify.Field()
     refresh_token = graphql_jwt.Refresh.Field()

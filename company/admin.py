@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from django.http.response import HttpResponseRedirect
 
-from company.models import Company, CompanyImage, Brand, Model
+from company.models import Company, CompanyImage, Brand, Model, Delivery
 
 
 class CompanyImageInline(admin.TabularInline):
@@ -43,3 +43,9 @@ class BrandAdmin(admin.ModelAdmin):
     search_fields = ['name']
     readonly_fields = ('image_tag',)
     inlines = [ModelInline]
+
+
+@admin.register(Delivery)
+class DeliveryAdmin(admin.ModelAdmin):
+    list_display = ['number','date', 'time','user']
+    search_fields = ['number']
